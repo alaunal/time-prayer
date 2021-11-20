@@ -1,19 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 
-import { BrowserRouter } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/es/integration/react';
+import { BrowserRouter } from "react-router-dom";
+import { PersistGate } from "redux-persist/es/integration/react";
 
-import GlobalStyles from './GlobalStyles';
-import reportWebVitals from './reportWebVitals';
+import GlobalStyles from "./GlobalStyles";
+import reportWebVitals from "./reportWebVitals";
 
-import configureStore from './store';
-import Routes from './routers';
+import configureStore from "./store";
+import Routes from "./routers";
 
 const { persistor, store } = configureStore();
 
-const Root = () => {
+const Root: React.FC<any> = () => {
   return (
     <>
       <GlobalStyles />
@@ -28,7 +28,7 @@ const Root = () => {
   );
 };
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+ReactDOM.render(<Root />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
