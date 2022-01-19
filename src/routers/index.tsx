@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter  } from "react-router-dom";
 
 import Home from "../pages/Home";
 import Errors from "../pages/Errors";
@@ -14,4 +14,4 @@ const Index = () => (
   </Switch>
 );
 
-export default Index;
+export default withRouter(Index);

@@ -1,9 +1,11 @@
 /* global */
 import { init, RematchDispatch, RematchRootState } from "@rematch/core";
 import createPersistPlugin, { getPersistor } from "@rematch/persist";
-import createLoadingPlugin from "@rematch/loading";
+import loadingPlugin, { ExtraModelsFromLoading } from "@rematch/loading"
 import storage from "redux-persist/es/storage";
 import { models, RootModel } from "../models";
+
+type FullModel = ExtraModelsFromLoading<RootModel>
 
 // Create plugins
 const persistPlugin: any = createPersistPlugin({
@@ -12,14 +14,12 @@ const persistPlugin: any = createPersistPlugin({
   blacklist: [],
 });
 
-const loadingPlugin: any = createLoadingPlugin({});
-
 const store = init({
   models,
   redux: {
     middlewares: [],
   },
-  plugins: [persistPlugin, loadingPlugin],
+  plugins: [persistPlugin, loadingPlugin()],
 });
 
 const persistor = getPersistor();
@@ -32,4 +32,4 @@ export default configureStore;
 
 export type Store = typeof store;
 export type Dispatch = RematchDispatch<RootModel>;
-export type RootState = RematchRootState<RootModel>;
+export type RootState = RematchRootState<RootModel, FullModel>;
