@@ -9,6 +9,7 @@ interface buttonProps {
 
 interface navigateProps {
   selectDate?: string;
+  handleChangeDate: (val: string) => void;
 }
 
 const getWeek = () => {
@@ -26,17 +27,18 @@ const getWeek = () => {
   return days;
 };
 
-const DateNavigation: React.FC<navigateProps> = ({ selectDate }) => {
+const DateNavigation: React.FC<navigateProps> = ({ selectDate, handleChangeDate }) => {
   const thisWeek = getWeek();
 
   const itemNavigation = thisWeek.map((day, index) => {
     const date = moment(day).format("DD");
     const daySort = moment(day).format("ddd");
     const isActive = moment(day).format("DD") === moment(selectDate).format("DD");
+    const dateForSelect = moment(day).format("DD MMM YYYY");
 
     return (
       <div key={index}>
-        <Button isActive={isActive}>
+        <Button isActive={isActive} onClick={(event: React.MouseEvent<HTMLElement>) => handleChangeDate(dateForSelect)}>
           <span>{date}</span> <br /> {daySort}
         </Button>
       </div>

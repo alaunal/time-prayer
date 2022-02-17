@@ -4,6 +4,7 @@ import { RootState, Dispatch } from "../../store";
 import tw, { styled, css } from "twin.macro";
 
 import { isEmpty } from "lodash";
+import moment from "moment";
 
 import Layout from "../../components/Layout";
 import Sidebar from "../../components/Sidebar";
@@ -15,14 +16,34 @@ import bgCover from "../../assets/bg-image.jpg";
 
 const Home: React.FC<any> = () => {
   const locationState = useSelector((state: RootState) => state.location);
+  const scheduleState = useSelector((state: RootState) => state.schedule);
+
   const dispatch = useDispatch<Dispatch>();
 
+  // -- State of lat long
   const [currentCoordinate, setCurrentCoordinate] = useState({
     latitude: -6.2295712,
     longitude: 106.759478,
   });
 
+  // -- state of location
   const [currentLocation, setCurrentLocation] = useState("Jakarta, Indonesia");
+
+  // -- state of selected date
+  const [selectedDate, setSelectedDate] = useState<string>(moment().format("DD MMM YYYY"));
+
+  // -- state of times prayer
+  const [selectedTime, setSelectedTime] = useState<any>({});
+
+  const handleChangeDate = (val: string) => {
+    setSelectedDate(val);
+
+    dispatch.schedule.fetchTimesByDate({
+      latitude: currentCoordinate.latitude,
+      longitude: currentCoordinate.longitude,
+      date: moment(val).format("D-MM-YYYY"),
+    });
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -33,6 +54,12 @@ const Home: React.FC<any> = () => {
     });
 
     dispatch.location.getLocation(currentCoordinate);
+
+    dispatch.schedule.fetchTimesByDate({
+      latitude: currentCoordinate.latitude,
+      longitude: currentCoordinate.longitude,
+      date: moment(selectedDate).format("D-MM-YYYY"),
+    });
   }, []);
 
   useEffect(() => {
@@ -41,6 +68,12 @@ const Home: React.FC<any> = () => {
     }
   }, [locationState]);
 
+  useEffect(() => {
+    if (!isEmpty(scheduleState)) {
+      setSelectedTime(scheduleState);
+    }
+  }, [scheduleState]);
+
   return (
     <Layout>
       <BoxCard>
@@ -48,9 +81,26 @@ const Home: React.FC<any> = () => {
           <Sidebar location={currentLocation} />
         </LeftCol>
         <RightCol>
-          <DateInfo />
-          <DateNavigation />
-          <ListTime />
+          <DateInfo
+            day={
+              !isEmpty(selectedTime)
+                ? moment(selectedTime.date.readable).format("dddd")
+                : moment(selectedDate).format("dddd")
+            }
+            date={
+              !isEmpty(selectedTime)
+                ? moment(selectedTime.date.readable).format("DD MMM YYYY")
+                : moment(selectedDate).format("DD MMM YYYY")
+            }
+            islamicDay={!isEmpty(selectedTime) ? selectedTime.date.hijri.weekday.en : ""}
+            islamicDate={
+              !isEmpty(selectedTime)
+                ? `${selectedTime.date.hijri.day} ${selectedTime.date.hijri.month.en} ${selectedTime.date.hijri.year}`
+                : ""
+            }
+          />
+          <DateNavigation selectDate={selectedDate} handleChangeDate={handleChangeDate} />
+          <ListTime data={!isEmpty(selectedTime) ? selectedTime.timings : {}} />
         </RightCol>
       </BoxCard>
     </Layout>

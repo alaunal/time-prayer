@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import "twin.macro";
 
 export type SidebarProps = {
@@ -40,10 +41,10 @@ DateInfo.propTypes = {
 };
 
 DateInfo.defaultProps = {
-  day: "Moday",
-  date: "23 March 2021",
-  islamicDay: "Al Athnayn",
-  islamicDate: "23 Rabīʿ al-awwal 1443",
+  day: moment().format("dddd"),
+  date: moment().format("DD MMM YYYY"),
+  islamicDay: "",
+  islamicDate: "",
 };
 
 export default DateInfo;

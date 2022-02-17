@@ -1,45 +1,41 @@
 import React from "react";
+import PropTypes from "prop-types";
 import tw, { styled, css } from "twin.macro";
+
+import { map, isEmpty } from "lodash";
 
 interface listTime {
   isActive?: boolean;
 }
 
-const ListTime: React.FC<any> = () => {
+export type ListTimeProps = {
+  data?: any;
+};
+
+const ListTime: React.FC<ListTimeProps> = ({ data }) => {
   return (
     <Wrapper>
-      <div tw="flex-1">
-        <List>
-          <div tw="text-lg text-gray-500">Fajr</div>
-          <div tw="text-lg text-gray-500">04:23 (WIB)</div>
-        </List>
-        <List>
-          <div tw="text-lg text-gray-500">Sunrise</div>
-          <div tw="text-lg text-gray-500">05:22 (WIB)</div>
-        </List>
-        <List isActive>
-          <div tw="text-lg text-gray-700 font-medium">Dhuhr</div>
-          <div tw="text-lg text-gray-700 font-medium">05:22 (WIB)</div>
-        </List>
-        <List>
-          <div tw="text-lg text-gray-500">Asr</div>
-          <div tw="text-lg text-gray-500">05:22 (WIB)</div>
-        </List>
-        <List>
-          <div tw="text-lg text-gray-500">Maghrib</div>
-          <div tw="text-lg text-gray-500">05:22 (WIB)</div>
-        </List>
-        <List>
-          <div tw="text-lg text-gray-500">Isha</div>
-          <div tw="text-lg text-gray-500">05:22 (WIB)</div>
-        </List>
-        <List>
-          <div tw="text-lg text-gray-500">Imsak</div>
-          <div tw="text-lg text-gray-500">05:22 (WIB)</div>
-        </List>
-      </div>
+      {!isEmpty(data) ? (
+        <div tw="flex-1">
+          {map(data, (item, index) => (
+            <List key={index}>
+              <div tw="text-lg text-gray-500">{index}</div>
+              <div tw="text-lg text-gray-500">{item}</div>
+            </List>
+          ))}
+        </div>
+      ) : (
+        <div tw="flex-1 py-20">
+          <h1 tw="text-xl text-gray-500 text-center mb-2 font-semibold">Not Avaliable!</h1>
+          <p tw="text-sm text-gray-600 text-center">Please Check your connection, times prayer failed load!</p>
+        </div>
+      )}
     </Wrapper>
   );
+};
+
+ListTime.propTypes = {
+  data: PropTypes.object,
 };
 
 // -- styled area
