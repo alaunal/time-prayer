@@ -4,7 +4,7 @@ import type { RootModel } from ".";
 
 export type ScheduleState = any;
 
-const endPoint = " http://api.aladhan.com/v1/";
+const endPoint = " https://api.aladhan.com/v1/";
 
 export const schedule = createModel<RootModel>()({
   state: {} as ScheduleState,
