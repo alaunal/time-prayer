@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, Dispatch } from "../../store";
 import tw, { styled, css } from "twin.macro";
 
-import { isEmpty } from "lodash";
+import { isEmpty, map } from "lodash";
 import moment from "moment";
 
 import Layout from "../../components/Layout";
@@ -35,6 +35,28 @@ const Home: React.FC<any> = () => {
   // -- state of times prayer
   const [selectedTime, setSelectedTime] = useState<any>({});
 
+  const checkCommingPrayerTime = () => {
+
+    let currentTime = moment().format("HH:mm");
+    let restTime: any = [];
+
+    if (!isEmpty(selectedTime)) {
+
+
+      map(selectedTime.timings, (item, index) => {
+        if (currentTime <= item) {
+          restTime.push({name: index, time: item});
+        }
+      });
+
+      if (restTime.length > 0) {
+        return restTime[0];
+      }
+    }
+
+    return {};
+  };
+
   const handleChangeDate = (val: string) => {
     setSelectedDate(val);
 
@@ -45,13 +67,36 @@ const Home: React.FC<any> = () => {
     });
   };
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      setCurrentCoordinate({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
+  const hadleSuccessLocation = (position: any) => {
+    let crd = position.coords;
+
+    dispatch.location.getLocation({
+      latitude: crd.latitude,
+      longitude: crd.longitude,
     });
+
+    dispatch.schedule.fetchTimesByDate({
+      latitude: crd.latitude,
+      longitude: crd.longitude,
+      date: moment(selectedDate).format("D-MM-YYYY"),
+    });
+
+    setCurrentCoordinate({
+      latitude: crd.latitude,
+      longitude: crd.longitude,
+    });
+  };
+
+  const handleErrorLocation = (error: any) => {
+    console.warn(`ERROR(${error.code}): ${error.message}`);
+  };
+
+  useEffect(() => {
+    let options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
 
     dispatch.location.getLocation(currentCoordinate);
 
@@ -60,6 +105,9 @@ const Home: React.FC<any> = () => {
       longitude: currentCoordinate.longitude,
       date: moment(selectedDate).format("D-MM-YYYY"),
     });
+
+    navigator.geolocation.getCurrentPosition(hadleSuccessLocation, handleErrorLocation, options);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -78,7 +126,7 @@ const Home: React.FC<any> = () => {
     <Layout>
       <BoxCard>
         <LeftCol>
-          <Sidebar location={currentLocation} />
+          <Sidebar location={currentLocation} prayTime={checkCommingPrayerTime()} />
         </LeftCol>
         <RightCol>
           <DateInfo
@@ -100,7 +148,7 @@ const Home: React.FC<any> = () => {
             }
           />
           <DateNavigation selectDate={selectedDate} handleChangeDate={handleChangeDate} />
-          <ListTime data={!isEmpty(selectedTime) ? selectedTime.timings : {}} />
+          <ListTime data={!isEmpty(selectedTime) ? selectedTime.timings : {}} prayerTime={checkCommingPrayerTime()} />
         </RightCol>
       </BoxCard>
     </Layout>

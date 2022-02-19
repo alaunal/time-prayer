@@ -10,15 +10,17 @@ interface listTime {
 
 export type ListTimeProps = {
   data?: any;
+  prayerTime?: any;
 };
 
-const ListTime: React.FC<ListTimeProps> = ({ data }) => {
+const ListTime: React.FC<ListTimeProps> = ({ data, prayerTime }) => {
+
   return (
     <Wrapper>
       {!isEmpty(data) ? (
         <div tw="flex-1">
           {map(data, (item, index) => (
-            <List key={index}>
+            <List key={index} isActive={prayerTime.name === index}>
               <div tw="text-lg text-gray-500">{index}</div>
               <div tw="text-lg text-gray-500">{item}</div>
             </List>
@@ -36,6 +38,7 @@ const ListTime: React.FC<ListTimeProps> = ({ data }) => {
 
 ListTime.propTypes = {
   data: PropTypes.object,
+  prayerTime: PropTypes.object,
 };
 
 // -- styled area

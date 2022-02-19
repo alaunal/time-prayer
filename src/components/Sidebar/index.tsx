@@ -4,12 +4,11 @@ import tw, { styled, css } from "twin.macro";
 import { BsGithub, BsFillGeoAltFill } from "react-icons/bs";
 
 export type SidebarProps = {
-  prayTime?: string;
-  times?: string;
+  prayTime?: any;
   location?: string;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ prayTime, times, location }) => {
+const Sidebar: React.FC<SidebarProps> = ({ prayTime, location }) => {
   return (
     <>
       <Heading>
@@ -19,8 +18,8 @@ const Sidebar: React.FC<SidebarProps> = ({ prayTime, times, location }) => {
         <p>Prayer times web application</p>
       </Heading>
       <div tw="text-center z-10">
-        <p tw="text-gray-200 mb-2 text-2xl">{ prayTime }</p>
-        <h2 tw="text-7xl text-white font-light mb-2">{ times }</h2>
+        <p tw="text-gray-200 mb-2 text-2xl">{ prayTime.name }</p>
+        <h2 tw="text-7xl text-white font-light mb-2">{ prayTime.time }</h2>
         <p tw="text-gray-200">
           <BsFillGeoAltFill tw="inline-block align-middle mr-1" /> { location }
         </p>
@@ -49,14 +48,12 @@ const Sidebar: React.FC<SidebarProps> = ({ prayTime, times, location }) => {
 // -- PropTypes
 
 Sidebar.propTypes = {
-  prayTime: PropTypes.string,
-  times: PropTypes.string,
+  prayTime: PropTypes.object,
   location: PropTypes.string,
 };
 
 Sidebar.defaultProps = {
-  prayTime: "Ashr",
-  times: "04:20",
+  prayTime: {name: '-', times: '00:00'},
   location: "Jakarta Indonesia",
 };
 
