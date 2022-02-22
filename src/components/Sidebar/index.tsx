@@ -17,28 +17,27 @@ const Sidebar: React.FC<SidebarProps> = ({ prayTime, location }) => {
         </h1>
         <p>Prayer times web application</p>
       </Heading>
-      <div tw="text-center z-10">
-        <p tw="text-gray-200 mb-2 text-2xl">{ prayTime.name }</p>
-        <h2 tw="text-7xl text-white font-light mb-2">{ prayTime.time }</h2>
-        <p tw="text-gray-200">
-          <BsFillGeoAltFill tw="inline-block align-middle mr-1" /> { location }
-        </p>
-      </div>
+      <ContentTime>
+        <PrayName>{prayTime.name}</PrayName>
+        <PrayTime>{prayTime.time}</PrayTime>
+        <PrayLocation>
+          <BsFillGeoAltFill /> {location}
+        </PrayLocation>
+      </ContentTime>
       <Footer>
         <div>
-          <p tw="text-white text-sm">
-            Copyright <span tw="font-medium">AKCODE</span> 2021
-          </p>
+          <Copyright tw="text-white text-sm">
+            Copyright <span>AKCODE</span> 2021
+          </Copyright>
         </div>
         <div>
-          <a
+          <GithubLink
             href="https://github.com/alaunal/time-prayer"
             target="_blank"
             rel="noreferrer"
-            tw="text-white text-sm inline-block"
           >
-            <BsGithub tw="inline-block mr-1 align-middle" /> Github
-          </a>
+            <BsGithub /> Github
+          </GithubLink>
         </div>
       </Footer>
     </>
@@ -53,7 +52,7 @@ Sidebar.propTypes = {
 };
 
 Sidebar.defaultProps = {
-  prayTime: {name: '-', times: '00:00'},
+  prayTime: { name: "-", times: "00:00" },
   location: "Jakarta Indonesia",
 };
 
@@ -76,6 +75,39 @@ const Heading = styled.div(() => [
   `,
 ]);
 
+const ContentTime = styled.div(() => [tw`text-center z-10`]);
+
+const PrayName = styled.p(() => [tw`text-gray-200 mb-2 text-2xl`]);
+
+const PrayTime = styled.h2(() => [tw`text-7xl text-white font-light mb-2`]);
+
+const PrayLocation = styled.p(() => [
+  tw`text-gray-200`,
+  css`
+    svg {
+      ${tw`inline-block align-middle mr-1`}
+    }
+  `,
+]);
+
 const Footer = styled.footer(() => [tw`text-center z-10 flex justify-between w-full`]);
+
+const Copyright = styled.p(() => [
+  tw`text-white text-sm`,
+  css`
+    span {
+      ${tw`font-medium`}
+    }
+  `,
+]);
+
+const GithubLink = styled.a(() => [
+  tw`text-white text-sm inline-block`,
+  css`
+    svg {
+      ${tw`inline-block mr-1 align-middle`}
+    }
+  `,
+]);
 
 export default Sidebar;

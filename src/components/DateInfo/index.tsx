@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import "twin.macro";
+import tw, { styled, css } from "twin.macro";
 
 export type SidebarProps = {
   day?: string;
@@ -12,22 +12,22 @@ export type SidebarProps = {
 
 const DateInfo: React.FC<SidebarProps> = ({ day, date, islamicDate, islamicDay }) => {
   return (
-    <div tw="flex w-full items-center justify-between p-6">
-      <div>
-        <p tw="text-left text-gray-400">
-          <span tw="font-bold text-gray-600 text-xl">{day}</span>
+    <Wrapper>
+      <DateContent>
+        <p>
+          <span>{day}</span>
           <br />
           {date}
         </p>
-      </div>
-      <div>
-        <p tw="text-right text-gray-400">
-          <span tw="font-bold text-gray-600 text-xl">{islamicDay}</span>
+      </DateContent>
+      <DateContent>
+        <p>
+          <span>{islamicDay}</span>
           <br />
           {islamicDate}
         </p>
-      </div>
-    </div>
+      </DateContent>
+    </Wrapper>
   );
 };
 
@@ -46,5 +46,21 @@ DateInfo.defaultProps = {
   islamicDay: "",
   islamicDate: "",
 };
+
+// -- styled area
+
+const Wrapper = styled.div(() => [tw`flex w-full items-center justify-between p-6`]);
+
+const DateContent = styled.div(() => [
+  css`
+    p {
+      ${tw`text-left text-gray-400`}
+
+      span {
+        ${tw`font-bold text-gray-600 text-xl`}
+      }
+    }
+  `,
+]);
 
 export default DateInfo;
